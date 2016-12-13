@@ -167,14 +167,28 @@
         // if there is accumulator, start at collection[0] / i = 0;
         // if not, accumulator = collection[0] / i = 1.
     if (arguments.length < 3) {
-      accumulator = collection[0];
-      var index = 1;
-    } else {
-      var index = 0;
-    }
-    for (index; index < collection.length; index++) {
-      accumulator = iterator(accumulator, collection[index]);
-    }
+      var skipped = true;
+      if (Array.isArray(collection)) {
+        accumulator = collection[0];
+        var skippedIndex = 0;
+      } else {
+        var keys = Object.getOwnPropertyNames(collection);
+        accumulator = collection[keys[0]];
+        var skippedIndex = keys[0];
+      }
+
+      //var index = 1;
+    } 
+    _.each(collection, function(item, keyOrIndex, collection) {
+      //if there a skipped, and it's the one to skip
+      if (skipped && keyOrIndex === skippedIndex) {
+      } else {
+        accumulator = iterator(accumulator, item);
+      }
+
+    });
+    
+
     return accumulator;
   };
 
