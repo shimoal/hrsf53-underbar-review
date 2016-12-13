@@ -94,18 +94,34 @@
   _.reject = function(collection, test) {
     // TIP: see if you can re-use _.filter() here, without simply
     // copying code in and modifying it
+    return _.filter(collection, function(item) {
+      if (!test(item)) {
+        return item;
+      }
+    });
   };
 
-  // Produce a duplicate-free version of the array.
+  
   _.uniq = function(array) {
+    var results = [];
+    
+    _.each(array, function(item) {
+      if (_.indexOf(results, item) === -1) {
+        results.push(item);
+      }
+    });
+
+    return results;
   };
 
 
   // Return the results of applying an iterator to each element.
   _.map = function(collection, iterator) {
-    // map() is a useful primitive iteration function that works a lot
-    // like each(), but in addition to running the operation on all
-    // the members, it also maintains an array of results.
+    var results = [];
+    _.each(collection, function(item) {
+      results.push(iterator(item));
+    });
+    return results;
   };
 
   /*
@@ -147,6 +163,19 @@
   //   }); // should be 5, regardless of the iterator function passed in
   //          No accumulator is given so the first element is used.
   _.reduce = function(collection, iterator, accumulator) {
+    // check if accumulator exists
+        // if there is accumulator, start at collection[0] / i = 0;
+        // if not, accumulator = collection[0] / i = 1.
+    if (arguments.length < 3) {
+      accumulator = collection[0];
+      var index = 1;
+    } else {
+      var index = 0;
+    }
+    for (index; index < collection.length; index++) {
+      accumulator = iterator(accumulator, collection[index]);
+    }
+    return accumulator;
   };
 
   // Determine if the array or object contains a given value (using `===`).
