@@ -269,6 +269,19 @@
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
   _.defaults = function(obj) {
+      // iterate over arguments
+    for (var i = 1; i < arguments.length; i++) {
+      var currentArgument = arguments[i];
+      // iterate over keys in current argument
+      for (var key in currentArgument) {
+        // push each key/value pair into obj
+        if (obj[key] === undefined) {
+          obj[key] = currentArgument[key];
+        } 
+      }
+    }
+    return obj;
+
   };
 
 
@@ -312,6 +325,27 @@
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
+    //create an array storage object
+    // create an object to store the function paramater and the value pair
+    var history = {};
+
+    var internalFunc = function(key){
+      console.log(key);
+    };
+    return internalFunc();
+
+    if (history[func] === undefined) {
+      history[func] = func.call(this, arguments);
+      return func;
+    } else {
+      return history[func];
+    }
+
+
+    //if a function has been run, return a value
+
+    //only if a function hasn't been run:
+    //return a function and store it's function parameter and value
   };
 
   // Delays a function for the given number of milliseconds, and then calls
