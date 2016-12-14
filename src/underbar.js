@@ -329,17 +329,17 @@
     // create an object to store the function paramater and the value pair
     var history = {};
 
-    var internalFunc = function(key){
-      console.log(key);
+    var internalFunc = function() {
+      var stringifiedArgs = '';
+      for (var i = 0; i < arguments.length; i++) {
+        stringifiedArgs += arguments[i];
+      }
+      if (history[stringifiedArgs] === undefined) {
+        history[stringifiedArgs] = func.apply(this, arguments);
+      }
+      return history[stringifiedArgs];
     };
-    return internalFunc();
-
-    if (history[func] === undefined) {
-      history[func] = func.call(this, arguments);
-      return func;
-    } else {
-      return history[func];
-    }
+    return internalFunc;
 
 
     //if a function has been run, return a value
@@ -355,6 +355,13 @@
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
+    var args = [];
+    for (var i = 2; i < arguments.length; i++) {
+      args.push(arguments[i]);
+    }
+    return setTimeout(function() { 
+      return func(...args);
+    }, wait);
   };
 
 
@@ -369,6 +376,18 @@
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
+    //set up results array
+    //set up a copy of the array
+    var results = [];
+    var copy = array.slice(0, array.length);
+    //use Math.random to get a random number
+    for (var numOfElems = copy.length - 1; numOfElems >= 0; numOfElems--) {
+      var index = Math.floor(Math.random() * numOfElems);
+      results.push(copy[index]);
+      copy.splice(index, 1);
+    }
+    return results;
+
   };
 
 
